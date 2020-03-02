@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Chat</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  </head>
+  <body>
+    <input type="text" name="text" id="username" value="Guest">
+    <input type="text" name="text" id="text">
+    <input type="button" id="btn" value="Send" onClick="send()" />
+    <p id="chat"></p>
+    <script>
+      loopMessages()
+      function loopMessages() {
+        $.get("/chat", function(data, status) {
+          document.getElementById("chat").innerHTML = `${data}`
+        });
+        setTimeout(() => {
+          loopMessages()
+        }, 500)
+      }
+      function send() {
+        if (document.getElementById("username").value !== "") {
+          if (document.getElementById("text").value !== "") {
+            $.get("/send?message=" + encodeURIComponent(document.getElementById("username").value + " | " + document.getElementById("text").value), function(data, status) {});
+            document.getElementById("text").value = ""
+          }
+        }
+      }
+    </script>
+  </body>
+</html>
